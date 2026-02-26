@@ -13,8 +13,10 @@ elif operation == "/":
         print("Cannot divide by 0!")
     else:
         suma = num_a / num_b
-if operation == "":
+elif operation == "":
     print("You did not input an operation!")
+else:
+    print(f"Operation {operation} does not exist!")
     
 
 try:
