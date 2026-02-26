@@ -1,8 +1,13 @@
-weight = float(input("Enter your weight: "))
+weight = input("Enter your weight: ")
+dig_weight = weight.isdigit()
+if dig_weight:
+    weight = float(weight)
 
 unit = input("Enter weight unit(kg/lbs): ")
 
-if weight == 0:
+if dig_weight == False:
+    print("Weight must be a digit!")
+elif weight == 0:
     print("You weigh nothing!")
 elif unit == "kg":
     weight = weight * 2.205
