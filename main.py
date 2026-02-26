@@ -22,4 +22,4 @@ try:
 except NameError:
     print("Try again")
 else:
-    print(f"Result: {suma}")
+    print(f"Result: {round(suma, 2)}")
