@@ -12,13 +12,53 @@
 
 # print(net_price(500))
 
-import time
+# import time
 
-def count(end,start=0): #def args must follow custom args, so user doesn't need to input them
-    for x in range(start,end+1):
-        print(x)
-        time.sleep(1)
-    print("Done!")
+# def count(end,start=0): #def args must follow custom args, so user doesn't need to input them
+#     for x in range(start,end+1):
+#         print(x)
+#         time.sleep(1)
+#     print("Done!")
 
-count(5)
+# count(5)
 
+#keyword args
+# def hello(greeting,title,first,last):
+#     print(f"{greeting} {title}{first} {last}")
+
+# hello("Hello",first="Spongebob",last="Sqarepants",title="Mr.")
+
+# def get_phone(country,area,first,last):
+#     return f"{country}-{area}-{first}-{last}"
+
+# phone_num = get_phone(country=1,area=123,first=456,last=7890)
+# print(phone_num)
+
+#arbitrary args
+
+# def add(*args):
+#     total = 0
+#     for arg in args:
+#         total += arg
+#     return total
+
+# print(add(1,2,3,4,5,6))
+
+# def display_name(*args):
+#     for arg in args:
+#         print(arg, end=" ")
+
+# display_name("Dr.","Stepan","Sokolov")
+
+# def print_adress(**kwargs):
+#     for key, value in kwargs.items():
+#         print(f"{key}: {value}")
+# print_adress(street="123 Fake St.",apt="100",city="Detroit",state="MI",zip="12345")
+
+def shipping_label(*args,**kwargs):
+    for arg in args:
+        print(arg,end=" ")
+    print()
+    for value in kwargs.values():
+        print(value,end=" ")
+shipping_label("Dr.","Spongebob","Sqarepants","III",street = "123 Fake St.",apt="100",state="MI",zip="12345")
