@@ -1,5 +1,5 @@
 from models import AirportCreate, AirportUpdate, AirportResponse
-from database import airports, airport_id_counter
+from database.storage import airports, airport_id_counter
 
 
 def get_all_airports():
