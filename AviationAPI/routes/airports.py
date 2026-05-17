@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
 
-from models import Airport, AirportUpdate
+from models import AirportCreate, AirportUpdate, AirportResponse
 from services.airport_service import get_all_airports, get_airport_by_icao, create_airport, delete_airport, update_airport
 
 router = APIRouter()
@@ -18,7 +18,7 @@ def get_airports():
         return get_all_airports()
 
 @router.post("/airports")
-def create_route_airport(airport: Airport):
+def create_route_airport(airport: AirportCreate):
     try:
         return create_airport(airport)
     except ValueError:

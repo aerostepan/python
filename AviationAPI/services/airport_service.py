@@ -1,5 +1,6 @@
-from models import Airport, AirportUpdate
-from database import airports
+from models import AirportCreate, AirportUpdate, AirportResponse
+from database import airports, airport_id_counter
+
 
 def get_all_airports():
     return airports
@@ -11,14 +12,18 @@ def get_airport_by_icao(icao):
     raise ValueError("Airport not found")
 
 
-def create_airport(airport: Airport):
+def create_airport(airport: AirportCreate):
     for existing_airport in airports:
         if existing_airport.get("icao") == airport.icao:
             raise ValueError("Airport already exists")
-    airports.append(airport.model_dump())
+    #airports.append(airport.model_dump())
+    new_airport = airport.model_dump()
+    new_airport["id"] = airport_id_counter["next_id"]
+    airports.append(new_airport)
+    airport_id_counter["next_id"] = airport_id_counter["next_id"] + 1
     return {
         "message": "Airport created",
-        "airport": airport
+        "airport": new_airport
     }
 
 def delete_airport(icao: str):
@@ -39,3 +44,5 @@ def update_airport(icao: str, airport: AirportUpdate):
                 "airport": existing_airport
             }
     raise ValueError("Airport not found")
+
+
