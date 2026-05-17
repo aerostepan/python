@@ -1,21 +1,32 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+
 
 from models import Airport
-from database import airports
+from services.airport_service import get_all_airports, get_airport_by_icao, create_airport, delete_airport
 
 router = APIRouter()
 
+@router.get("/airports/{icao}")
+def get_airports_icao(icao: str):
+    try:
+        return get_airport_by_icao(icao)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Airport not found")
+
 @router.get("/airports")
 def get_airports():
-    return airports
+        return get_all_airports()
 
 @router.post("/airports")
-def create_airport(airport: Airport):
+def create_route_airport(airport: Airport):
+    try:
+        return create_airport(airport)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Airport already exists")
 
-    airports.append(airports.model_dump())
-    return {
-        "message": "Airport created",
-        "airport": airport
-    }
-
-
+@router.delete("/airports/{icao}")
+def delete_route_airport(icao: str):
+    try:
+        return delete_airport(icao)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Airport not found")
