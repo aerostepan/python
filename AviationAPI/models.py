@@ -7,4 +7,10 @@ class Airport(BaseModel):
     city: str
     country: str
 
+class AirportUpdate(BaseModel):
+    name: str
+    city: str
+    country: str
+
+
 

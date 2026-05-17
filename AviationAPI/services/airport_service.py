@@ -1,4 +1,4 @@
-from models import Airport
+from models import Airport, AirportUpdate
 from database import airports
 
 def get_all_airports():
@@ -27,5 +27,15 @@ def delete_airport(icao: str):
             airports.remove(existing_airport)
             return {
                 "message": "Airport deleted",
+            }
+    raise ValueError("Airport not found")
+
+def update_airport(icao: str, airport: AirportUpdate):
+    for existing_airport in airports:
+        if existing_airport.get("icao") == icao:
+            existing_airport.update(airport.model_dump())
+            return {
+                "message": "Airport updated",
+                "airport": existing_airport
             }
     raise ValueError("Airport not found")

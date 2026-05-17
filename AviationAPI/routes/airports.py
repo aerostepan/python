@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 
 
-from models import Airport
-from services.airport_service import get_all_airports, get_airport_by_icao, create_airport, delete_airport
+from models import Airport, AirportUpdate
+from services.airport_service import get_all_airports, get_airport_by_icao, create_airport, delete_airport, update_airport
 
 router = APIRouter()
 
@@ -28,5 +28,12 @@ def create_route_airport(airport: Airport):
 def delete_route_airport(icao: str):
     try:
         return delete_airport(icao)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Airport not found")
+
+@router.put("/airports/{icao}")
+def update_route_airport(icao: str, airport: AirportUpdate):
+    try:
+        return update_airport(icao, airport)
     except ValueError:
         raise HTTPException(status_code=404, detail="Airport not found")
