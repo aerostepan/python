@@ -55,3 +55,33 @@ class RunwayResponse(BaseModel):
     length_meters: int
     surface_type: str
 
+class Aircraft(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    registration: str
+    icao_type: str
+    manufacturer: str
+    model: str
+    operator: str
+    status: str
+
+class AircraftCreate(BaseModel):
+    registration: str
+    icao_type: str
+    manufacturer: str
+    model: str
+    operator: str
+    status: str
+
+class AircraftUpdate(BaseModel):
+    operator: str
+    status: str
+
+class AircraftResponse(BaseModel):
+    id: int
+    registration: str
+    icao_type: str
+    manufacturer: str
+    model: str
+    operator: str
+    status: str
+
