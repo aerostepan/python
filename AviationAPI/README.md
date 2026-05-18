@@ -1,54 +1,150 @@
-# Aviation API Project
+# AviationAPI
 
-A FastAPI-based CRUD API for managing airport data.
+AviationAPI is a FastAPI-based backend project for managing aviation-related operational data.
 
-This project was created to improve backend development skills with Python and FastAPI while learning API architecture, validation, routing, and service-based backend design.
+The project currently supports airport and runway management and is being developed toward an airport operations management system.
 
----
-
-## Features
-
-- Create airports
-- Get all airports
-- Get airport by ICAO
-- Update airport information
-- Delete airports
-- Pydantic data validation
-- Layered backend architecture
-- Internal ID generation
-- REST-style API endpoints
+The main goal of this project is to practice backend development with Python while building a realistic aviation-related API.
 
 ---
 
-## Tech Stack
+## Technologies
 
 - Python
 - FastAPI
-- Pydantic
-- Uvicorn
-
-Planned upgrades:
-
-- SQLite
 - SQLModel
-- Persistent database storage
+- SQLite
+- Uvicorn
+- Pydantic
 
 ---
 
-## Project Structure
+## Project Architecture
+
+The project uses a layered backend architecture:
 
 ```text
-routes/
-    airports.py          -> API endpoints and HTTP handling
+ROUTES
+↓
+SERVICES
+↓
+REPOSITORY
+↓
+DATABASE
+```
 
-services/
-    airport_service.py   -> Business logic
+### Routes Layer
 
-models.py               -> Pydantic models and validation
+Responsible for:
 
-database.py             -> Temporary in-memory storage
+- API endpoints
+- HTTP request handling
+- HTTP exceptions
+- calling service functions
 
-main.py                 -> FastAPI application entry point
+### Service Layer
+
+Responsible for:
+
+- business logic
+- validation rules
+- checking if entities exist
+- preparing response data
+- raising business-level errors
+
+### Repository Layer
+
+Responsible for:
+
+- database queries
+- insert operations
+- update operations
+- delete operations
+- database session handling
+
+### Database Layer
+
+Responsible for:
+
+- database engine creation
+- table creation
+- SQLite connection setup
+
+---
+
+## Current Project Structure
+
+```text
+AviationAPI/
+│
+├── database/
+│   ├── db.py
+│   ├── airport_repo.py
+│   └── runway_repo.py
+│
+├── routes/
+│   ├── airports.py
+│   └── runways.py
+│
+├── services/
+│   ├── airport_service.py
+│   └── runway_service.py
+│
+├── models.py
+├── main.py
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Implemented Features
+
+### Airports
+
+The airport module currently supports:
+
+- Create airport
+- Get all airports
+- Get airport by ICAO code
+- Update airport data
+- Delete airport
+
+### Runways
+
+The runway module currently supports:
+
+- Create runway
+- Get all runways
+- Get runway by ID
+- Update runway data
+- Delete runway
+
+---
+
+## Database Models
+
+### Airport
+
+```python
+class Airport(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    icao: str
+    iata: str
+    name: str
+    city: str
+    country: str
+```
+
+### Runway
+
+```python
+class Runway(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    airport_id: int = Field(foreign_key="airport.id")
+    runway_code: str
+    length_meters: int
+    surface_type: str
 ```
 
 ---
@@ -62,32 +158,75 @@ main.py                 -> FastAPI application entry point
 | GET | `/airports` | Get all airports |
 | GET | `/airports/{icao}` | Get airport by ICAO code |
 | POST | `/airports` | Create a new airport |
-| PUT | `/airports/{icao}` | Update airport information |
+| PUT | `/airports/{icao}` | Update airport data |
 | DELETE | `/airports/{icao}` | Delete airport |
 
----
+### Runways
 
-## Validation
-
-The API uses Pydantic models for automatic request validation.
-
-Current validation rules:
-
-- ICAO code must contain exactly 4 characters
-- IATA code must contain exactly 3 characters
-- Airport update requests cannot change ICAO or IATA codes
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/runways` | Get all runways |
+| GET | `/runways/{runway_id}` | Get runway by ID |
+| POST | `/runways` | Create a new runway |
+| PUT | `/runways/{runway_id}` | Update runway data |
+| DELETE | `/runways/{runway_id}` | Delete runway |
 
 ---
 
-## How to Run
+## Example Airport Request
 
-### 1. Create a virtual environment
+```json
+{
+  "icao": "LOWG",
+  "iata": "GRZ",
+  "name": "Graz Airport",
+  "city": "Graz",
+  "country": "AT"
+}
+```
+
+---
+
+## Example Runway Request
+
+```json
+{
+  "airport_id": 2,
+  "runway_code": "08L/26R",
+  "length_meters": 3000,
+  "surface_type": "Asphalt"
+}
+```
+
+Another runway example:
+
+```json
+{
+  "airport_id": 2,
+  "runway_code": "17C/35C",
+  "length_meters": 3650,
+  "surface_type": "Concrete"
+}
+```
+
+---
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone <repository_url>
+cd AviationAPI
+```
+
+### 2. Create a virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-### 2. Activate the virtual environment
+### 3. Activate the virtual environment
 
 macOS / Linux:
 
@@ -101,50 +240,167 @@ Windows:
 .venv\Scripts\activate
 ```
 
-### 3. Install dependencies
+### 4. Install dependencies
 
 ```bash
-pip install fastapi uvicorn
+pip install -r requirements.txt
 ```
 
-### 4. Run the server
+---
+
+## Run the Project
+
+Start the development server:
 
 ```bash
 uvicorn main:app --reload
 ```
 
----
+The API will be available at:
 
-## API Documentation
+```text
+http://127.0.0.1:8000
+```
 
-After starting the server, open:
+Swagger UI will be available at:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-FastAPI automatically generates interactive API documentation using Swagger UI.
+---
+
+## Database
+
+The project currently uses SQLite.
+
+The database file is created automatically when the application starts.
+
+Current database setup:
+
+```text
+SQLite + SQLModel
+```
+
+The database engine is configured in:
+
+```text
+database/db.py
+```
 
 ---
 
-## Current Storage
+## Important Notes
 
-The current version uses temporary in-memory storage in `database.py`.
+### SQLite ID Behavior
 
-This means that all created airports are lost when the server restarts.
+SQLite does not renumber IDs after deletion.
 
-Planned improvement:
+Example:
 
-- Replace in-memory storage with SQLite and SQLModel.
+```text
+Existing IDs:
+1
+2
+3
+```
+
+If ID `1` is deleted, the remaining rows keep their original IDs:
+
+```text
+2
+3
+```
+
+The next inserted row will receive a new ID instead of reusing the deleted one.
+
+This is correct database behavior because IDs are stable unique identifiers.
 
 ---
 
-## Future Improvements
+### Correct SQLModel Save Pattern
 
-- SQLite database integration
-- SQLModel ORM
-- Aircraft endpoints
-- Flight endpoints
-- Authentication and authorization
+When saving or updating objects with SQLModel, the usual order is:
+
+```python
+session.commit()
+session.refresh(entity)
+```
+
+Reason:
+
+- `commit()` saves changes to the database
+- `refresh()` reloads the updated entity from the database
+
+This is especially important when the database generates an ID automatically.
+
+---
+
+## Current Relationship
+
+The project currently has this relationship:
+
+```text
+Airport → Runway
+```
+
+A runway belongs to an airport through:
+
+```python
+airport_id: int = Field(foreign_key="airport.id")
+```
+
+---
+
+## Development Notes
+
+Route function names should not be the same as service function names.
+
+Correct example:
+
+```python
+create_runway_route()
+create_runway_service()
+```
+
+Incorrect example:
+
+```python
+create_runway_service()
+```
+
+inside a route file, because it can overwrite the imported service function and cause recursion errors.
+
+---
+
+## Planned Features
+
+Planned future development:
+
+- Aircraft model
+- Flight model
+- Gate or stand management
+- Flight scheduling
+- Airport operations logic
+- Relationships between airports, runways, aircraft, and flights
+- Better validation rules
+- Authentication
+- PostgreSQL migration
 - Docker support
-- Deployment to cloud or VPS
+- Deployment to a VPS or cloud platform
+
+---
+
+## Project Goal
+
+The long-term goal is to develop this project into an airport operations management backend.
+
+Possible future modules:
+
+- airport database
+- runway management
+- gate and stand assignment
+- aircraft management
+- flight scheduling
+- operational status tracking
+- dispatch-related validation logic

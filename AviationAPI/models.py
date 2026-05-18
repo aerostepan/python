@@ -23,6 +23,14 @@ class AirportUpdate(BaseModel):
     city: str
     country: str
 
+class AirportResponse(BaseModel):
+    id: int
+    icao: str
+    iata: str
+    name: str
+    city: str
+    country: str
+
 class Runway(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     airport_id: int = Field(foreign_key="airport.id")
@@ -30,6 +38,20 @@ class Runway(SQLModel, table=True):
     length_meters: int
     surface_type: str
 
+class RunwayCreate(BaseModel):
+    airport_id: int
+    runway_code: str
+    length_meters: int
+    surface_type: str
 
+class RunwayUpdate(BaseModel):
+    length_meters: int
+    surface_type: str
 
+class RunwayResponse(BaseModel):
+    id: int
+    airport_id: int
+    runway_code: str
+    length_meters: int
+    surface_type: str
 
