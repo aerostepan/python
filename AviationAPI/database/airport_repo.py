@@ -46,5 +46,12 @@ def update_airport(icao, update_data: AirportUpdate):
         session.refresh(airport)
         return airport
 
+def get_airport_by_id(airport_id):
+    with Session(engine) as session:
+        statement = select(Airport).where(Airport.id == airport_id)
+        airport = session.exec(statement).first()
+        return airport
+
+
 
 

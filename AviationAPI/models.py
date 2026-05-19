@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime
+
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
 
@@ -84,4 +86,39 @@ class AircraftResponse(BaseModel):
     model: str
     operator: str
     status: str
+
+class Flight(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    flight_number: str
+    aircraft_id: int = Field(foreign_key="aircraft.id")
+    departure_airport_id: int = Field(foreign_key="airport.id")
+    arrival_airport_id: int = Field(foreign_key="airport.id")
+    scheduled_departure: datetime
+    scheduled_arrival: datetime
+    status: str
+
+class FlightCreate(BaseModel):
+    flight_number: str
+    aircraft_id: int
+    departure_airport_id: int
+    arrival_airport_id: int
+    scheduled_departure: datetime
+    scheduled_arrival: datetime
+    status: str
+
+class FlightUpdate(BaseModel):
+    scheduled_departure: datetime
+    scheduled_arrival: datetime
+    status: str
+
+class FlightResponse(BaseModel):
+    id: int
+    flight_number: str
+    aircraft_id: int
+    departure_airport_id: int
+    arrival_airport_id: int
+    scheduled_departure: datetime
+    scheduled_arrival: datetime
+    status: str
+
 

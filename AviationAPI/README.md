@@ -80,15 +80,18 @@ AviationAPI/
 ├── database/
 │   ├── db.py
 │   ├── airport_repo.py
-│   └── runway_repo.py
+│   ├── runway_repo.py
+│   └── aircraft_repo.py
 │
 ├── routes/
 │   ├── airports.py
-│   └── runways.py
+│   ├── runways.py
+│   └── aircrafts.py
 │
 ├── services/
 │   ├── airport_service.py
-│   └── runway_service.py
+│   ├── runway_service.py
+│   └── aircraft_service.py
 │
 ├── models.py
 ├── main.py
@@ -119,6 +122,16 @@ The runway module currently supports:
 - Get runway by ID
 - Update runway data
 - Delete runway
+
+### Aircraft
+
+The aircraft module currently supports:
+
+- Create aircraft
+- Get all aircraft
+- Get aircraft by Registration
+- Update aircraft data
+- Delete aircraft
 
 ---
 

@@ -43,3 +43,9 @@ def update_aircraft(registration, new_aircraft_data: AircraftUpdate):
         session.commit()
         session.refresh(aircraft)
         return aircraft
+
+def get_aircraft_by_id(aircraft_id):
+    with Session(engine) as session:
+        statement = select(Aircraft).where(Aircraft.id == aircraft_id)
+        aircraft = session.exec(statement).first()
+        return aircraft
