@@ -9,19 +9,19 @@ router = APIRouter()
 def get_runways():
     return get_runways_service()
 
-@router.get("/runways/{runway_id}")
-def get_runway_by_id(runway_id: int):
-    try:
-        return get_runway_by_id_service(runway_id)
-    except ValueError:
-        raise HTTPException(status_code=404, detail="Runway not found")
-
 @router.post("/runways")
 def create_runway(runway: RunwayCreate):
     try:
         return create_runway_service(runway)
     except ValueError:
         raise HTTPException(status_code=400, detail="Runway already exists")
+
+@router.get("/runways/{runway_id}")
+def get_runway_by_id(runway_id: int):
+    try:
+        return get_runway_by_id_service(runway_id)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Runway not found")
 
 @router.delete("/runways/{runway_id}")
 def delete_runway(runway_id: int):

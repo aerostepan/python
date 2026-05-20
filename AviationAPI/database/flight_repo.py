@@ -62,5 +62,17 @@ def get_flight_details_by_id(flight_id):
             "arrival_airport": flight.arrival_airport,
 
         }
-
+def filter_flights(status = None, aircraft_id = None, departure_airport = None, arrival_airport = None):
+    with Session(engine) as session:
+        statement = select(Flight)
+        if status is not None:
+            statement = statement.where(Flight.status == status)
+        if aircraft_id is not None:
+            statement = statement.where(Flight.aircraft_id == aircraft_id)
+        if departure_airport is not None:
+            statement = statement.where(Flight.departure_airport == departure_airport)
+        if arrival_airport is not None:
+            statement = statement.where(Flight.arrival_airport == arrival_airport)
+        result = session.exec(statement)
+        return result.all()
 

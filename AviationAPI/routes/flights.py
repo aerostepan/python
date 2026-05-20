@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException
+from typing import Optional
 
 from models import FlightCreate, FlightUpdate
-from services.flight_service import get_flights_service,get_flight_by_id_service,create_flight_service,update_flight_service,delete_flight_service, get_flight_details_service
+from services.flight_service import get_flights_service, get_flight_by_id_service, create_flight_service, \
+    update_flight_service, delete_flight_service, get_flight_details_service, filter_flights_service
 
 router = APIRouter()
 
@@ -9,12 +11,17 @@ router = APIRouter()
 def get_flights():
     return get_flights_service()
 
-@router.get("/flight/{flight_id}")
-def get_flight(flight_id: int):
-    try:
-        return get_flight_by_id_service(flight_id)
-    except ValueError:
-        raise HTTPException(status_code=404, detail="Flight not found")
+@router.get("/flight/filter")
+def filter_flight_route(
+        status: Optional[str] = None,
+        aircraft_id: Optional[int] = None,
+        departure_airport: Optional[int] = None,
+        arrival_airport: Optional[int] = None,
+):
+    return filter_flights_service(status=status,
+                                  aircraft_id=aircraft_id,
+                                  departure_airport=departure_airport,
+                                  arrival_airport=arrival_airport)
 
 @router.post("/flight")
 def create_flight(flight: FlightCreate):
@@ -22,6 +29,13 @@ def create_flight(flight: FlightCreate):
         return create_flight_service(flight)
     except ValueError:
         raise HTTPException(status_code=400, detail="Flight already exists")
+
+@router.get("/flight/{flight_id}")
+def get_flight(flight_id: int):
+    try:
+        return get_flight_by_id_service(flight_id)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Flight not found")
 
 @router.delete("/flight/{flight_id}")
 def delete_flight(flight_id: int):
@@ -43,5 +57,6 @@ def get_flight_details(flight_id: int):
         return get_flight_details_service(flight_id)
     except ValueError:
         raise HTTPException(status_code=404, detail="Flight not found")
+
 
 

@@ -6,12 +6,7 @@ from services.airport_service import get_all_airports_service, get_airport_by_ic
 
 router = APIRouter()
 
-@router.get("/airports/{icao}")
-def get_airports_icao(icao: str):
-    try:
-        return get_airport_by_icao_service(icao)
-    except ValueError:
-        raise HTTPException(status_code=404, detail="Airport not found")
+
 
 @router.get("/airports")
 def get_airports():
@@ -23,6 +18,14 @@ def create_route_airport(airport: AirportCreate):
         return create_airport_service(airport)
     except ValueError:
         raise HTTPException(status_code=400, detail="Airport already exists")
+
+@router.get("/airports/{icao}")
+def get_airports_icao(icao: str):
+    try:
+        return get_airport_by_icao_service(icao)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Airport not found")
+
 
 @router.delete("/airports/{icao}")
 def delete_route_airport(icao: str):

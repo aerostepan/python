@@ -8,6 +8,13 @@ router = APIRouter()
 def get_aircrafts():
     return get_all_aircraft_service()
 
+@router.post("/aircraft")
+def create_aircraft(aircraft: AircraftCreate):
+    try:
+        return create_aircraft_service(aircraft)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Aircraft already exists")
+
 @router.get("/aircrafts/{registration}")
 def get_aircraft_reg(registration):
     try:
@@ -15,12 +22,7 @@ def get_aircraft_reg(registration):
     except ValueError:
         raise HTTPException(status_code=404, detail="Aircraft not found")
 
-@router.post("/aircraft")
-def create_aircraft(aircraft: AircraftCreate):
-    try:
-        return create_aircraft_service(aircraft)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Aircraft already exists")
+
 
 @router.delete("/aircraft/{registration}")
 def delete_aircraft(registration: str):
