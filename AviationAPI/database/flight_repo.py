@@ -4,9 +4,29 @@ from database.db import engine
 
 from models import Flight, FlightUpdate
 
-def get_all_flights():
+def get_all_flights(limit = None, offset = None,sort_by = None,sort_order = None):
     with Session(engine) as session:
+
+        allowed_sort_fields = {
+            "id": Flight.id,
+            "flight_number": Flight.flight_number,
+            "scheduled_departure": Flight.scheduled_departure,
+            "scheduled_arrival": Flight.scheduled_arrival,
+            "status": Flight.status,
+        }
+
         statement = select(Flight)
+
+        if sort_by is not None:
+            column = allowed_sort_fields[sort_by]
+            if sort_order == "desc":
+                statement = statement.order_by(column.desc())
+            else:
+                statement = statement.order_by(column.asc())
+        if limit is not None:
+            statement = statement.limit(limit)
+        if offset is not None:
+            statement = statement.offset(offset)
         result = session.exec(statement)
         return result.all()
 

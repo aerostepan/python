@@ -6,8 +6,16 @@ from database.flight_repo import get_all_flights,save_flight,delete_flight,updat
 
 
 
-def get_flights_service():
-    return get_all_flights()
+def get_flights_service(limit = None, offset = None,sort_by = None,sort_order = None):
+    if limit is not None and limit <= 0:
+        raise ValueError()
+    if offset is not None and offset < 0:
+        raise ValueError()
+    if sort_order is not None and sort_order not in ['asc', 'desc']:
+        raise ValueError()
+    if sort_by is not None and sort_by not in ['id','flight_number','scheduled_departure','scheduled_arrival','status']:
+        raise ValueError()
+    return get_all_flights(limit, offset, sort_by, sort_order)
 
 def get_flight_by_id_service(flight_id):
     flight = get_flight_by_id(flight_id)

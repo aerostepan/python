@@ -8,8 +8,13 @@ from services.flight_service import get_flights_service, get_flight_by_id_servic
 router = APIRouter()
 
 @router.get("/flights")
-def get_flights():
-    return get_flights_service()
+def get_flights(
+    limit: int = 20,
+    offset: int = 0,
+    sort_by: Optional[str] = None,
+    sort_order: str = "asc",
+):
+    return get_flights_service(limit, offset, sort_by, sort_order)
 
 @router.get("/flight/filter")
 def filter_flight_route(
