@@ -21,7 +21,7 @@ def create_airport_service(airport: AirportCreate):
         country=airport.country,
     )
     existing_airport = get_airport_by_icao(airport.icao)
-    if existing_airport is None:
+    if existing_airport is not None:
         raise ValueError("Airport already exists")
     save_airport(new_airport)
     return {
@@ -31,7 +31,7 @@ def create_airport_service(airport: AirportCreate):
 
 def delete_airport_service(icao: str):
     existing_airport = delete_airport(icao)
-    if existing_airport is not None:
+    if existing_airport is None:
         return {
             "message": "Airport deleted",
             "airport": existing_airport

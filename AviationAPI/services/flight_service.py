@@ -1,7 +1,11 @@
+from fastapi import APIRouter
+
 from database.aircraft_repo import get_aircraft_by_id
 from database.airport_repo import get_airport_by_id
-from models import Flight,FlightCreate,FlightUpdate
-from database.flight_repo import get_all_flights,get_flight_by_id,save_flight,delete_flight,update_flight
+from models import Flight,FlightCreate,FlightUpdate, FlightDetailedResponse
+from database.flight_repo import get_all_flights,save_flight,delete_flight,update_flight,get_flight_details_by_id, get_flight_by_id
+
+
 
 def get_flights_service():
     return get_all_flights()
@@ -60,4 +64,8 @@ def update_flight_service(flight_id, flight:FlightUpdate):
         }
     raise ValueError()
 
-
+def get_flight_details_service(flight_id):
+    flight = get_flight_details_by_id(flight_id)
+    if flight is None:
+        raise ValueError()
+    return flight
