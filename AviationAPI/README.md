@@ -8,7 +8,7 @@ The main goal of this project is to practice backend development with Python whi
 
 ---
 
-## Technologies
+## Tech Stack
 
 - Python
 - FastAPI
