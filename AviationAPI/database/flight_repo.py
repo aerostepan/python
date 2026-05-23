@@ -4,7 +4,7 @@ from database.db import engine
 
 from models import Flight, FlightUpdate
 
-def get_all_flights(limit = None, offset = None,sort_by = None,sort_order = None):
+def get_all_flights(limit = None, offset = None,sort_by = None,sort_order = None, status = None, aircraft_id = None, departure_airport_id = None, arrival_airport_id = None):
     with Session(engine) as session:
 
         allowed_sort_fields = {
@@ -16,6 +16,14 @@ def get_all_flights(limit = None, offset = None,sort_by = None,sort_order = None
         }
 
         statement = select(Flight)
+        if status is not None:
+            statement = statement.where(Flight.status == status)
+        if aircraft_id is not None:
+            statement = statement.where(Flight.aircraft_id == aircraft_id)
+        if departure_airport_id is not None:
+            statement = statement.where(Flight.departure_airport_id == departure_airport_id)
+        if arrival_airport_id is not None:
+            statement = statement.where(Flight.arrival_airport_id == arrival_airport_id)
 
         if sort_by is not None:
             column = allowed_sort_fields[sort_by]
@@ -82,17 +90,3 @@ def get_flight_details_by_id(flight_id):
             "arrival_airport": flight.arrival_airport,
 
         }
-def filter_flights(status = None, aircraft_id = None, departure_airport = None, arrival_airport = None):
-    with Session(engine) as session:
-        statement = select(Flight)
-        if status is not None:
-            statement = statement.where(Flight.status == status)
-        if aircraft_id is not None:
-            statement = statement.where(Flight.aircraft_id == aircraft_id)
-        if departure_airport is not None:
-            statement = statement.where(Flight.departure_airport == departure_airport)
-        if arrival_airport is not None:
-            statement = statement.where(Flight.arrival_airport == arrival_airport)
-        result = session.exec(statement)
-        return result.all()
-
