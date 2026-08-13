@@ -90,3 +90,4 @@ def get_flight_details_by_id(flight_id):
             "arrival_airport": flight.arrival_airport,
 
         }
+
